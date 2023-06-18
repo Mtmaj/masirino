@@ -1,0 +1,46 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسیرینو</title>
+    {% tailwind_css %}
+</head>
+<body>
+    <div class="flex flex-row w-full h-full justify-center items-center bg-[#f7f7f7]">
+        <div class="md:w-[800px] w-[80%] flex flex-row h-fit rounded-[10px] shadow-lg bg-white">
+            <img src="/static/images/login_image.jpg" class="w-[400px] rounded-[10px] md:block hidden" />
+            <div class="w-full flex flex-col justify-center items-center">
+                <div class="h-[60px]"></div>
+                <span class="text-[25px]">ورود</span>
+                <input id="username" placeholder="نام کاربری..." class="mt-[20px] w-[80%] px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                <input id="password" type="password" placeholder="رمز عبور..." class="mt-[15px] w-[80%] px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                {% if status == False %}
+                <span style="font-size: 14px;color: red;margin-bottom: -5px;" class="mt-[10px]">اطلاعات وارد شده یافت نشد!</span>
+                {% endif %}
+                <a href="/forget-password" class="mt-[10px] text-[15px] text-primary">آیا رمز عبور خود را فراموش کرده اید؟</a>
+                <div class="h-[60px]"></div>
+                <button onclick="Login_BTN()" class="px-[5px] py-[2px] bg-[#11bef2] text-[17px] text-white w-[30%] rounded-[5px]">ورود</button>
+                <a href="/signup" class="mt-[10px] text-[15px] text-primary md:mb-[0px] mb-[20px]">آیا حساب کاربری ندارید؟ ثبت نام</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function Login_BTN(){
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const data_query = {
+                'username' : username,
+                'password' : password
+            }
+            const str_query = JSON.stringify(data_query)
+            const url_encode_query = encodeURIComponent(str_query)
+            const encode_query = btoa(url_encode_query)
+            location.href = 'http://127.0.0.1:8000/?AUTHENTICATION=' + encode_query
+        }
+        
+    </script>
+</body>
+</html>

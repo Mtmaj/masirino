@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'peyda';
+    font-style: normal;
+    src: url("/static/fonts/Peyda-Medium.ttf") format("truetype");
+}
+body {
+    direction: rtl;
+    height: 100vh;
+    font-family: 'peyda', serif;
+}

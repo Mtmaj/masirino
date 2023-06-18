@@ -1,0 +1,155 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسیرینو</title>
+    <link rel="stylesheet" type="text/css" href="https://static.neshan.org/sdk/openlayers/5.3.0/ol.css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script type="text/javascript" src="https://static.neshan.org/sdk/openlayers/5.3.0/ol.js"></script>
+    {% tailwind_css %}
+</head>
+<style>
+    html,body{
+        height: 100%;
+    }
+    ::-webkit-scrollbar {
+       width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    }
+</style>
+<script>
+    
+    function getQueryParams(url) {
+        const paramArr = url.slice(url.indexOf('?') + 1).split('&');
+        const params = {};
+        paramArr.map(param => {
+            const [key, val] = param.split('=');
+            params[key] = decodeURIComponent(val);
+        })
+        return params;
+    }
+    function sendloc(){
+        if(Object.keys(getQueryParams(document.URL)).length == 1){
+            console.log('Ok')
+            if(navigator.geolocation){
+                console.log('Ok')
+                try{
+                    navigator.geolocation.getCurrentPosition((pos)=>{
+                        document.location.href = '?lat='+pos.coords.latitude+'&lon='+pos.coords.longitude;
+                    })
+                }
+                catch(err){
+                    document.location.reload();
+                }
+            }else{
+                document.location.reload();
+            }
+        }
+    }
+
+    function set_sort_time(){
+        const query = new URLSearchParams(location.search)
+        query.set('sort',"time")
+        location.search = query.toString()
+    }
+
+    function set_sort_distance(){
+        const query = new URLSearchParams(location.search)
+        query.set('sort',"distance")
+        location.search = query.toString()
+    }
+
+</script>
+<body onload="sendloc()">
+    <div class="w-full h-full position-absolute z-[10000] flex justify-center items-center hidden" style="position: absolute;">
+        <div id="map" class="w-[90%] h-[90%]" style="background: #eee; border: 2px solid #aaa;z-index: 10000;overflow: hidden;"></div>
+    </div>
+    <script type="text/javascript">
+        var myMap = new ol.Map({
+            target: 'map',
+            key: 'web.fd92cfaa28324c03bbffb8b26af4d71d',
+            maptype: 'standard-night',
+            poi: true,
+            traffic: false,
+            view: new ol.View({
+                center: ol.proj.fromLonLat([51.338076, 35.699756]),
+                zoom: 14
+            })
+        });
+    </script>
+    <div class="flex w-full h-full items-center justify-center">
+        {% include "Dashboard.html" %}
+        <div class="w-full h-full flex-col flex overflow-y items-start justify-start" style="padding-top: 20px;padding-left: 20px;padding-right: 20px;background-color: aliceblue;">
+            <span class="text-[25px]">پمپ بنزین های اطراف من</span>
+            <div style="height: 10px;"></div>
+            <span class="text-[15px]">در این بخش شما میتوانید پمپ بنزین های اطراف خود را بسته به موقعیت مکانی ببینید</span>
+            <div style="height: 400px;"></div>
+            {% if is_get_loc == True %}
+            <div class="flex flex-col lg:flex-row w-full">
+                <div class="flex flex-row w-full items-center" style="justify-content: space-between;">
+                    <span>مرتب سازی بر اساس : </span>
+                    <div class="flex flex-row">
+                        <label for="distance-sort">فاصله تا شما</label>
+                        <div style="width: 5px;" ></div>
+                        <input type="radio" name="sort" id="distance-sort" onclick="set_sort_distance()" {% if time_sort == False  %} checked {% endif %}>
+                        <div style="width: 15px;"></div>
+                        <label for="distance-sort">زمان رسیدن شما</label>
+                        <div style="width: 5px;"></div>
+                        <input type="radio" name="sort" id="time-sort" onclick="set_sort_time()" {% if time_sort == True  %} checked {% endif %}>
+                        <div class="lg:w-[20px] w-[0px]"></div>
+                    </div>
+                    
+                </div>
+                <div class="h-[10px] lg:h-[0px]"></div>
+                <div class="flex flex-row justify-between w-full items-center" style="justify-content: space-between;">
+                    <span>موقعیت مکانی : </span>
+                    <div class="flex flex row items-center">
+                        <select id="location-get" style="padding: 3px 32px;width: 207px;border: none;outline: none;border-radius: 10px;">
+                            <option value="geo" style="border: none;">موقعیت فعلی شما</option>
+                            <option value="map" onclick="init()">انتخاب از روی نقشه</option>
+                        </select>
+                        <div style="width: 10px;"></div>
+                        <a href="/" class="flex items-center">
+                            <img src="https://img.uxwing.com/wp-content/themes/uxwing/download/web-app-development/refresh-icon.png" alt="" style="width: 20px;">
+                        </a>
+                    </div>
+                    
+                </div>
+                
+                
+            </div>
+            <div style="width: 100%;height: 1px;background-color: black;margin: 15px 0px;"></div>
+            <div class="w-full" style="overflow-y: scroll;padding-bottom: 10px;padding-left: 5px;padding-right: 5px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 w-full lg:grid-cols-3" style="column-gap: 10px;row-gap: 20px;">
+                    {% if is_get_loc == True %}
+                        {% for item in gas_stations %}
+                        {% include "GasStationCard.html" with data=item %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

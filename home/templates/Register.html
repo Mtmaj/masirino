@@ -1,0 +1,96 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسیرینو</title>
+    {% tailwind_css %}
+</head>
+<body>
+    <div class="flex flex-row w-full h-full justify-center items-center bg-[#f7f7f7]">
+        <div class="md:w-[800px] w-[80%] w-[800px] flex flex-row h-fit rounded-[10px] shadow-lg bg-white">
+            <img src="/static/images/login_image.jpg" class="w-[400px] rounded-[10px] md:block hidden" />
+            <div class="w-full flex flex-col justify-center items-center">
+                <form class="flex flex-col justify-center items-center">
+                    <div class="h-[20px]"></div>
+                    <span class="text-[25px]">ثبت نام</span>
+                    <div class="flex flex-row w-[80%]">
+                        <input id="name" placeholder="نام..." class="mt-[15px] w-full px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                        <div class="w-[15px]"></div>
+                        <input id="lastname" placeholder="نام خانوادگی..." class="mt-[15px] w-full px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                    </div>
+                    <input id="username" placeholder="نام کاربری..." class="mt-[15px] w-[80%] px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                    <div class="flex flex-row w-[80%] mt-[5px]">
+                        {% if username_valid == False %}
+                        <span style="font-size: 12px;color: red;" class="w-full">نام کاربری معتبر نیست.</span>
+                        {% endif %}
+                    </div>
+                    <input id="email" placeholder="ایمیل..." class="mt-[15px] w-[80%] px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                    <div class="flex flex-row w-[80%] mt-[5px]">
+                        {% if email_valid == False %}
+                        <span style="font-size: 12px;color: red;" class="w-full">ایمیل معتبر نیست.</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex flex-row w-[80%]">
+                        <input type="password" id="password" placeholder="رمز عبور..." class="mt-[10px] w-full px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                        <div class="w-[15px]"></div>
+                        <input type="password" id="repassword" placeholder="تکرار رمز عبور..." class="mt-[10px] w-full px-[10px] py-[7px] border-0 outline-0 bg-[#00ffff14] rounded-[5px]"></input>
+                    </div>
+                    
+                    <div class="flex flex-row w-[80%] mt-[5px]">
+                        {% if password_valid == False %}
+                        <span style="font-size: 12px;color: red;" class="w-full">رمز عبور معتر نیست.</span>
+                        {% else %}
+                        <div class="w-full"></div>
+                        {% endif %}
+                        <div class="w-[15px]"></div>
+                        {% if repassword_valid == False %}
+                        <span style="font-size: 12px;color: red;" class="w-full">تکرار رمز عبور اشتباه است.</span>
+                        {% else %}
+                        <div class="w-full"></div>
+                        {% endif %}
+                    </div>
+                    <div class="h-[20px]"></div>
+                    <button type="button" onclick="signin()" class="px-[5px] py-[2px] bg-[#11bef2] text-[17px] text-white w-[30%] rounded-[5px]">ثبت نام</button>
+                    <a href="/" class="mt-[5px] text-[15px] text-primary md:mb-[0px] mb-[20px]">آیا حساب کاربری دارید؟ ورود </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function signin(){
+            const username = document.getElementById('username').value;
+            const name = document.getElementById('name').value;
+            const lastname = document.getElementById('lastname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const repassword = document.getElementById('repassword').value;
+            const query = {
+                "username" : username,
+                "password" : password,
+                "repassword" : repassword,
+                "name" : name,
+                "lastname" : lastname,
+                "email" : email
+            }
+            const str_query = JSON.stringify(query)
+
+            var url_encode_query = encodeURIComponent(str_query)
+            var encode_query = btoa(url_encode_query)
+            location.href = "http://127.0.0.1:8000/signup?SIGNUP-DATA-ENCODE="+encode_query
+
+        }
+        function base64EncodeUnicode(str) {
+        // First, we encodeURIComponent to convert any non-Latin1 characters into percent-encoded UTF-8
+            var utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode(parseInt(p1, 16));
+            });
+
+            // Then, we use the regular btoa function to base64 encode the UTF-8 string
+            return btoa(utf8Bytes);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تایید ایمیل</title>
+    {% tailwind_css %}
+</head>
+<style>
+    html,body{
+        height: 100%;
+    }
+</style>
+<body>
+    <div class="w-full h-full flex items-center justify-center">
+        <div class="flex flex-col p-5 items-center justify-center bg-primery rounded-[10px] md:w-[50%] w-[60%]">
+            <span class="text-[30px]">تایید ایمیل شما!</span>
+            <p class="text-center" style="text-align: center;">برای تایید ایمیل خود لینک احرازهویت که به ایمیل      {{ email }}    ارسال شده است وارد شوید   </p>
+            <img src="https://play-lh.googleusercontent.com/SldHLeS88zfGfIhnRCc8lHObSMLC5b0MGIeSOyTFoPTPIArt_F4gsW8TTPFzr2q1Gwaa" class="mt-[10px]" style="width: 150px;" />
+        </div>
+    </div>    
+</body>
+</html>
